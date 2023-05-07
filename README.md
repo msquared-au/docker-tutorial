@@ -32,5 +32,9 @@ For the purposes of this tutorial:
   with your domain name when entering commands
   * Note that host names that include `yourdomain.tld` should
     also have `yourdomain.tld` replaced with your domain name
+  * Note that your domain name should not have
+    [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security)
+    configured, or it will cause problems until you have SSL
+    enabled on your site
 * `mail@yourdomain.tld` means your email address; replace it with
   your email address when entering commands
