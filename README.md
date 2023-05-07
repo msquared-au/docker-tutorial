@@ -136,3 +136,19 @@ where the program is loaded and run when you want to use it.
 * The webserver configuration file is `/etc/nginx/conf.d/default.conf`
 * The folder containing the HTML files is `/usr/share/nginx/html/`
 
+## Create backing stores for web files
+
+In Docker, changes made to files inside a container are normally lost when the
+container is stopped or restarted; this means that fixing a misbehaving
+container can be as simple as restarting it.  However, it means that a separate
+mechanism is needed for storing data.  Docker provides "volumes" for this
+purpose.  Volumes can store data that you want to survive past a container, or
+to share between containers.
+
+So that we can store HTML files for our two demonstration sites, we will create
+two Docker volumes:
+
+1.  Run `docker volume create --name app1-web`
+1.  Run `docker volume create --name app2-web`
+1.  To see all volumes, run `docker volume ls`
+
