@@ -155,7 +155,7 @@ two Docker volumes:
 ## Test that the app1 web folder is accessible and persistent
 
 1.  Launch an nginx container serving the files for app1:
-    run `docker run -it -p 80:80 --rm --name app1-test --volume=app1-web:/usr/share/nginx/html nginx`
+    run `docker run -it -p 80:80 --rm --name app1 --volume=app1-web:/usr/share/nginx/html nginx`
 1.  Confirm you can connect from a web browser and that you see the nginx welcome page
 1.  Connect to the nginx container and make changes to the HTML pages:
     1.  Run `docker run -it --rm --volume=app1-web:/mnt/app1-web ubuntu bash`
@@ -165,9 +165,8 @@ two Docker volumes:
 1.  Shut down nginx with `^C`, then restart it with the command above
 1.  Check that the changes are still present
 
-You can perform the same set of steps but replace `app1-test` with `app2-test`
-and replace `app1-web` with `app2-web` to check that the app2 web folder is
-accessible and persistent.
+You can perform the same set of steps but replace `app1` with `app2` to check
+that the app2 web folder is accessible and persistent.
 
 ## Run and test two applications (containers) at the same time
 
