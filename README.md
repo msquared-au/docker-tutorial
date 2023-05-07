@@ -103,6 +103,7 @@ you can install the latest from the Docker project directly by following these
 instructions:
 
 1.  Follow these instructions: <https://docs.docker.com/engine/install/ubuntu/>
+    * These instructions include a step that checks your Docker installation
 1.  If you want to be able to run Docker as a normal user (instead of as root),
     also follow these instructions (but pay attention to the security warnings
     before doing so): <https://docs.docker.com/engine/install/linux-postinstall/>
