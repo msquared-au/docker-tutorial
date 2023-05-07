@@ -169,3 +169,16 @@ You can perform the same set of steps but replace `app1-test` with `app2-test`
 and replace `app1-web` with `app2-web` to check that the app2 web folder is
 accessible and persistent.
 
+## Run and test two applications (containers) at the same time
+
+We'll run two web servers at the same time, each in its own container.  So that
+the containers don't get in one another's way, we'll map each one to a
+different port on your host; you'll be able to connect to each one separately
+by specifying different port numbers in the URL to supply to your web browser.
+
+1.  To launch app1: run `docker run -it --rm -p 1080:80 --name=app1 --volume=app1-web:/usr/share/nginx/html nginx`
+1.  To launch app2: run `docker run -it --rm -p 2080:80 --name=app2 --volume=app2-web:/usr/share/nginx/html nginx`
+1.  To see app1: open a web browser window or tab for `http://dockertest.yourdomain.tld:1080`
+1.  To see app2: open a web browser window or tab for `http://dockertest.yourdomain.tld:2080`
+1.  Shut down each nginx container with `^C`
+
