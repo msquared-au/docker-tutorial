@@ -117,3 +117,22 @@ where the program is loaded and run when you want to use it.
 
 1.  Download the nginx image: run `docker pull nginx`
 
+## Test the nginx image
+
+1.  Create and run a Docker container based on the nginx image:
+    `docker run -it -p 80:80 --rm --name testnginx nginx`
+1.  To confirm that the container is serving a website, run `docker ps`
+1.  You should now be able to open a web browser and visit nginx's
+    test page either via your host's IP address or via
+    `dockertest.yourdomain.tld`
+1.  You can stop nginx by pressing ^C in the terminal where nginx
+    is running ("^C" means "hold the `CTRL` key while pressing the `C` key)
+
+### Troubleshooting information
+
+* To connect to the container and explore it while it's running:
+  `docker exec -it testnginx bash`
+* The main nginx configuration file in the container is `/etc/nginx/nginx.conf`
+* The webserver configuration file is `/etc/nginx/conf.d/default.conf`
+* The folder containing the HTML files is `/usr/share/nginx/html/`
+
