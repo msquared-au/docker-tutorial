@@ -107,3 +107,12 @@ instructions:
     also follow these instructions (but pay attention to the security warnings
     before doing so): <https://docs.docker.com/engine/install/linux-postinstall/>
 
+## Obtain the [nginx](https://www.nginx.com/) [Docker image](https://hub.docker.com/_/nginx)
+
+In Docker, images contain your (or somoene else's) application and containers
+are the environment in which that application is run.  Think of images as the
+.exe file or the computer's filesystem, and the container as the memory and CPU
+where the program is loaded and run when you want to use it.
+
+1.  Download the nginx image: run `docker pull nginx`
+
