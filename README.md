@@ -44,6 +44,20 @@ For the purposes of this tutorial:
 For this tutorial, we will use Ubuntu 22.04 LTS.  If a more-recent LTS version
 is available, you can use that but be aware that some steps may vary slightly.
 
-1.  Step one
-1.  Step two
+1.  Install Ubuntu 22.04 LTS
+1.  Set up the time zone for the server:
+    1.  Either run `tzselect` to browse timezones or `timedatectl list-timezones` to list timezones
+        * You can use `grep` to search for your timezone. eg:
+          `timedatectl list-timezones | grep -i toronto` to find the timezone for Toronto
+    1.  Run `timedatectl set-timezone <timezone>` to set the timezone, replacing <timezone> with the timezone you found above
+        * eg: `timedatectl set-timezone America/Toronto` to set the server's timezone to Toronto's timezone
+1.  Update Ubuntu:
+    1.  Run `apt-get update`
+    1.  Run `apt-get upgrade`
+        * There's no need to restart any services if it offers, since we'll restart the host at the end of this setup process anyway
+1.  Set the hostname in `/etc/hostname` to `dockertest.yourdomain.tld`
+1.  If you have set up a physical host and need to add remote access via SSH, run these commands:
+    1.  `apt-get install openssh-server`
+    1.  `sudo systemctl enable ssh --now`
+1.  Reboot your host
 
