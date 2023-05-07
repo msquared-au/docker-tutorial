@@ -125,8 +125,8 @@ where the program is loaded and run when you want to use it.
 1.  You should now be able to open a web browser and visit nginx's
     test page either via your host's IP address or via
     `dockertest.yourdomain.tld`
-1.  You can stop nginx by pressing ^C in the terminal where nginx
-    is running ("^C" means "hold the `CTRL` key while pressing the `C` key)
+1.  You can stop nginx by pressing `^C` in the terminal where nginx
+    is running ("`^C`" means "hold the `CTRL` key while pressing the `C` key)
 
 ### Troubleshooting information
 
