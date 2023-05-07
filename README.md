@@ -96,3 +96,14 @@ So, to use nip.io as if it were your own domain name, replace `yourdomain.tld`
 with `10.20.30.40.nip.io` in the rest of this documentation (be sure to replace
 `10.20.30.40` with your host's public IP address, of course).
 
+## Install Docker Engine
+
+You can install Docker Engine (aka "just Docker") from Ubuntu's repository, or
+you can install the latest from the Docker project directly by following these
+instructions:
+
+1.  Follow these instructions: <https://docs.docker.com/engine/install/ubuntu/>
+1.  If you want to be able to run Docker as a normal user (instead of as root),
+    also follow these instructions (but pay attention to the security warnings
+    before doing so): <https://docs.docker.com/engine/install/linux-postinstall/>
+
