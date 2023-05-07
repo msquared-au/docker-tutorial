@@ -165,3 +165,7 @@ two Docker volumes:
 1.  Shut down nginx with `^C`, then restart it with the command above
 1.  Check that the changes are still present
 
+You can perform the same set of steps but replace `app1-test` with `app2-test`
+and replace `app1-web` with `app2-web` to check that the app2 web folder is
+accessible and persistent.
+
