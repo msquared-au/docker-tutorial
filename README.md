@@ -61,3 +61,38 @@ is available, you can use that but be aware that some steps may vary slightly.
     1.  `sudo systemctl enable ssh --now`
 1.  Reboot your host
 
+## DNS setup
+
+### For your own domain name
+
+If you have your own domain name, add the following records:
+
+* A hostname 'A' record `dockertest.yourdomain.tld` that points to your server's public IP address
+* A wildcard 'C' record `*.dockertest.yourdomain.tld` that points to `dockertest.yourdomain.tld`
+
+This will allow you to use arbitrary hostnames and have them all resolve to your host without
+having to set each of them up manually.  For example:
+
+ * `app1.dockertest.yourdomain.tld`
+ * `app2.dockertest.yourdomain.tld`
+
+### If you don't have a domain name
+
+If you don't have a domain name of your own, you can use one of a handful of
+DNS services that automatically provide arbitrary lookup for any IP address.
+One such service is [nip.io](https://nip.io).
+
+Once you have set up your host, you can embed its public IP address into a domain name based
+on nip.io and and subdomains will automatically resolve to that IP address.
+
+For example, if your host's public IP address were `10.20.30.40`, you could put
+`dockertest.10.20.30.40.nip.io` into your web browser to connect to your host's
+web service.  This service allows you to add arbitrary subdomains in the same
+way that a wildcard DNS record lets you do this (as described above).  So, you
+could also visit `app1.dockertest.10.20.30.40.nip.io` in your web browser and
+visit your host's web service.
+
+So, to use nip.io as if it were your own domain name, replace `yourdomain.tld`
+with `10.20.30.40.nip.io` in the rest of this documentation (be sure to replace
+`10.20.30.40` with your host's public IP address, of course).
+
