@@ -152,3 +152,16 @@ two Docker volumes:
 1.  Run `docker volume create --name app2-web`
 1.  To see all volumes, run `docker volume ls`
 
+## Test that the app1 web folder is accessible and persistent
+
+1.  Launch an nginx container serving the files for app1:
+    run `docker run -it -p 80:80 --rm --name app1-test --volume=app1-web:/usr/share/nginx/html nginx`
+1.  Confirm you can connect from a web browser and that you see the nginx welcome page
+1.  Connect to the nginx container and make changes to the HTML pages:
+    1.  Run `docker run -it --rm --volume=app1-web:/mnt/app1-web ubuntu bash`
+    1.  Install vim: run `apt-get update ; apt-get install vim`
+    1.  Edit the welcome page and change it: run `vim /mnt/app1-web/index.html`
+1.  Confirm that you can still connect from a browser and that the welcome page has changed
+1.  Shut down nginx with `^C`, then restart it with the command above
+1.  Check that the changes are still present
+
