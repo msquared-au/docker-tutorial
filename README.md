@@ -38,3 +38,12 @@ For the purposes of this tutorial:
     enabled on your site
 * `mail@yourdomain.tld` means your email address; replace it with
   your email address when entering commands
+
+## Set up your host
+
+For this tutorial, we will use Ubuntu 22.04 LTS.  If a more-recent LTS version
+is available, you can use that but be aware that some steps may vary slightly.
+
+1.  Step one
+1.  Step two
+
