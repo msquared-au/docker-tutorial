@@ -181,3 +181,59 @@ by specifying different port numbers in the URL to supply to your web browser.
 1.  To see app2: open a web browser window or tab for `http://dockertest.yourdomain.tld:2080`
 1.  Shut down each nginx container with `^C`
 
+## Create a network for containers to share
+
+To make it easy for the proxy container to connect to the other containers,
+we create a Docker-internal network for the containers to share:
+
+1.  Run `docker network create proxy-net`
+
+## Create an instance of nginx to handle incoming connections
+
+Creating a special-purpose "proxy" container gives us some useful capabilities:
+* All apps can share the same ports (port 80 for http connections, and port 443 for https connections)
+* https can be added to all apps without having to implement https support to any of the apps
+
+1.  Create a volume for the configuration: run `docker volume create proxy-conf`
+1.  Run a temporary docker instance to access the volume: run `docker run -it --rm --volume=proxy-conf/mount/proxy-conf ubuntu bash`
+1.  Install vim: run `apt-get update ; apt-get install vim`
+1.  Create `proxy.conf` in `/mnt/proxy-conf` and give it this content:
+    ```nginx
+    server {                # first server config is default when no other match
+        listen      80;
+        server_name _;      # don't match any legit host by accident
+        return      503;    # if someone is trying to access a server that we don't host, return "service unavailable"
+    }
+    server {
+        listen      80;
+        server_name app1.yourdomain.tld;
+        location    / {
+            proxy_pass http://app1;
+        }
+    }
+    server {
+        listen      80;
+        server_name app2.yourdomain.tld;
+        location    / {
+            proxy_pass http://app2;
+        }
+    }
+    ```
+
+## Run all three containers simultaneously and test
+
+1.  In this order, run these three commands:
+    1.  `docker run -it --rm --name=app1 --net=proxy-net --volume=app1-web:/usr/share/nginx/html nginx`
+    1.  `docker run -it --rm --name=app2 --net=proxy-net --volume=app2-web:/usr/share/nginx/html nginx`
+    1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 --volume=proxy-conf:/etc/nginx/conf.d nginx`
+1.  You should now be able to connect to app1 and app2 at http://app1.yourdomain.tld/ and http://app2.yourdomain.tld/ without using custom ports
+    * When you access app1, you should see activity in the proxy container and the app1 container
+    * When you access app2, you should see activity in the proxy container and the app2 container
+1.  When you're finished testing, shut down each nginx container with `^C`
+
+### Troubleshooting information
+
+* nginx's configuration is at /etc/nginx
+* To reload nginx config: `nginx -s reload`
+  * eg: to reload the proxy from the main host, run `docker exec proxy nginx -s reload`
+
