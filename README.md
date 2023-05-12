@@ -231,6 +231,13 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
     * When you access app2, you should see activity in the proxy container and the app2 container
 1.  When you're finished testing, shut down each nginx container with `^C`
 
+### Notes
+
+* There is no need to expose each app (note the lack of "-p" option when running the apps; only the proxy needs a "-p" option)
+* The proxy instance connects to the app instances via the proxy network we set up earlier
+* The proxy instance can see the other instances and connect to them via their names
+* The proxy instance's configuration file uses the names of the other instances to connect to them
+
 ### Troubleshooting information
 
 * nginx's configuration is at /etc/nginx
