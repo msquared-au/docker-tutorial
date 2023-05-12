@@ -244,3 +244,34 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 * To reload nginx config: `nginx -s reload`
   * eg: to reload the proxy from the main host, run `docker exec proxy nginx -s reload`
 
+## Replace our simple example nginx proxy with one that has some powerful automation built-in
+
+1.  fetch the nginx-proxy docker image: docker pull nginxproxy/nginx-proxy
+1.  in this order, run these commands:
+    1.  `docker run -it --rm --name=app1 --net=proxy-net --volume=app1-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app1.yourdomain.tld nginx`
+    1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 --volume=/var/run/docker.sock:/tmp/docker.sock:ro nginxproxy/nginx-proxy`
+    1.  `docker run -it --rm --name=app2 --net=proxy-net --volume=app2-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app2.yourdomain.tld nginx`
+1.  You should be able to access both app1 and app2 hosts via their respective
+    hostnames, even though one was created before and one was created after the
+    proxy was started up!
+1.  When you're finished testing, shut down each nginx container with `^C`
+
+### Notes
+
+* There is no explicit configuration of the proxy instance here: the proxy instance finds
+  the applications via the environment variable "VIRTUAL_HOST" specified on each instance
+* There is a tool running in the proxy instance called "docker-gen" that monitors
+  Docker for notifications of start-up and shut-down of other docker containers
+* docker-gen uses the information to update the configuration file inside the
+  proxy container and notify nginx that it needs to update its configuration
+* When the proxy container starts up, docker-gen checks for any existing
+  containers with the "VIRTUAL_HOST" environment variable, since otherwise it
+  will have missed the start-up notification for containers that were launched
+  before it
+
+### Troubleshooting information:
+* Configuration file that's maintained by docker-gen: /etc/nginx/conf.d/default.conf
+* More information:
+  * https://github.com/nginx-proxy/nginx-proxy
+  * https://hub.docker.com/r/nginxproxy/nginx-proxy
+
