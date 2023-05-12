@@ -202,7 +202,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
     server {                # first server config is default when no other match
         listen      80;
         server_name _;      # don't match any legit host by accident
-        return      503;    # if someone is trying to access a server that we don't host, return "service unavailable"
+        return      503;    # return "service unavailable" http status
     }
     server {
         listen      80;
