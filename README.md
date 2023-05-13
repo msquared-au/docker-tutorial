@@ -343,3 +343,49 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 
 * https://github.com/nginx-proxy/acme-companion
 
+## Create containers that are persistent
+
+While experimenting, we've been creating temporary containers that disappear
+when we cancel them.  Now that we've finished experimenting, we want to create
+containers that will run in the background and will restart when the host
+restarts.
+
+(Note: below we'll show an alternative mechanism for achieving this.)
+
+1.  to create the containers run these commands in any order:
+    * `docker container create --name=proxy --restart=unless-stopped --net=proxy-net
+      -p 80:80 -p 443:443
+      --volume certs:/etc/nginx/certs
+      --volume vhost:/etc/nginx/vhost.d
+      --volume html:/usr/share/nginx/html
+      --volume=/var/run/docker.sock:/tmp/docker.sock:ro
+      --env=TRUST_DOWNSTREAM_PROXY=false
+      nginxproxy/nginx-proxy`
+    * `docker container create --name acme --restart=unless-stopped
+      --volumes-from proxy
+      --volume /var/run/docker.sock:/var/run/docker.sock:ro
+      --volume acme:/etc/acme.sh
+      --env "DEFAULT_EMAIL=mail@yourdomain.tld"
+      nginxproxy/acme-companion`
+    * `docker container create --name=app1 --restart=unless-stopped --net=proxy-net
+      --volume=app1-web:/usr/share/nginx/html
+      --env=VIRTUAL_HOST=app1.mydomain.com
+      --env=LETSENCRYPT_HOST=app1.mydomain.com
+      nginx`
+    * `docker container create --name=app2 --restart=unless-stopped --net=proxy-net
+      --volume=app2-web:/usr/share/nginx/html
+      --env=VIRTUAL_HOST=app2.mydomain.com
+      --env=LETSENCRYPT_HOST=app2.mydomain.com
+      nginx`
+1.  Start the containers: run `docker start proxy acme app1 app2`
+1.  Test that you can connect to both applications, that the applications are
+    separate, and that you are redirected to https for the applications
+1.  Reboot the computer or virtual machine hosting the applications
+1.  Test again!
+
+If everything stayed up after a reboot, then you are done!
+
+Congratulations, you went through the journey of setting up Docker containers
+to run your applications, and hopefully learned a lot about Docker and about
+hosting applications under Docker.
+
