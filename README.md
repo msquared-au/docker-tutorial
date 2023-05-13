@@ -276,3 +276,55 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
   * https://github.com/nginx-proxy/nginx-proxy
   * https://hub.docker.com/r/nginxproxy/nginx-proxy
 
+## Add SSL support via a separate container that integrates with the proxy container
+
+1.  Fetch the Docker image: run `docker pull nginxproxy/acme-companion`
+1.  Create the volumes needed for sharing certs and config between the proxy container
+    and the acme container
+    (acme is the certificate protocol used by Let's Encrypt):
+    1.  Run `docker volume create --name certs`
+    1.  Run `docker volume create --name vhost`
+    1.  Run `docker volume create --name html`
+    1.  Run `docker volume create --name acme`
+1.  Start the proxy container and the acme certificate companion container;
+    in this order, run these commands:
+    1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 -p 443:443
+        --volume certs:/etc/nginx/certs --volume vhost:/etc/nginx/vhost.d
+        --volume html:/usr/share/nginx/html
+        --volume=/var/run/docker.sock:/tmp/docker.sock:ro
+        nginxproxy/nginx-proxy`
+    1.  `docker run -it --rm --name acme
+        --volumes-from proxy
+        --volume /var/run/docker.sock:/var/run/docker.sock:ro
+        --volume acme:/etc/acme.sh
+        --env "DEFAULT_EMAIL=mail@yourdomain.tld"
+        nginxproxy/acme-companion`
+1.  Start the first app container:
+    1.  Run `docker run -it --rm --name=app1 --net=proxy-net
+        --volume=app1-web:/usr/share/nginx/html
+        --env=VIRTUAL_HOST=app1.yourdomain.tld
+        --env=LETSENCRYPT_HOST=app1.yourdomain.tld nginx`
+1.  You should be able to go to app1.yourdomain.tld and automatically be
+    redirected to https://app1.yourdomain.tld - congratulations, you set up SSL
+    with zero effort!
+1.  If you watch the proxy log, you'll very quickly see a handful of things
+    connect to your new site, even though you might not yet have alerted anyone
+    to its existence!
+1.  Relax, this is part of Certificate Transparency: https://certificate.transparency.dev/
+1.  Some sites that might monitor the Certificate Transparency logs and inspect
+    your shiny new site include:
+    * https://leakix.net/
+    * https://domainsproject.org/
+    * Google
+1.  Now start the second app container:
+        docker run -it --rm --name=app2 --net=proxy-net
+        --volume=app2-web:/usr/share/nginx/html
+        --env=VIRTUAL_HOST=app2.yourdomain.tld
+        --env=LETSENCRYPT_HOST=app2.yourdomain.tld
+        nginx
+1.  You should be able to visit that site, too, and be redirected to https!
+
+### Additional information
+
+* https://github.com/nginx-proxy/acme-companion
+
