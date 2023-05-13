@@ -389,3 +389,53 @@ Congratulations, you went through the journey of setting up Docker containers
 to run your applications, and hopefully learned a lot about Docker and about
 hosting applications under Docker.
 
+## Use "docker compose" to manage persisten containers (optional)
+
+This step is optional, and is an alternative approach to the previous step for
+creating persistent containers.
+
+The way we created containers above is a procedural approach to creating
+containers, that is each step creates, runs, or otherwise manages a single
+container at a time.  "docker compose" provides a declarative way to manage a
+set of containers, including setup of Docker volumes and Docker networks; the
+set of containers can then be managed all at once with single commands.
+
+1.  Shut down the containers we created above: run `docker stop app1 app2 proxy acme`
+    * Tip: if you don't have any other containers running, this command will stop all containers: `docker stop $(docker ps -a -q)`
+1.  Remove the containers we created above: run `docker rm app1 app2 proxy acme`
+    * Tip: if you don't have any other containers on the system, this command will remove all stopped containers: `docker container prune`
+1.  Create a folder called `web`, and within it create a file called `compose.yaml` with the following content:
+    ```nginxproxy
+    services:
+      proxy:
+        image: nginxproxy/nginx-proxy
+        ports:
+          - "80:80"
+          - "443:443"
+        networks:
+          - proxy-net
+        volumes:
+          - certs:/etc/nginx/certs
+          - vhost:/etc/nginx/vhost.d
+          - html:/usr/share/nginx/html
+          - /var/run/docker.sock:/tmp/docker.sock:ro
+        environment:
+          - TRUST_DOWNSTREAM_PROXY=false
+      acme:
+        image: nginxproxy/acme-companion
+        networks:
+          - proxy-net
+        volumes_from:
+          - proxy
+        volumes:
+          - acme:/etc/acme.sh
+          - /var/run/docker.sock:/var/run/docker.sock:ro
+        environment:
+          - DEFAULT_EMAIL=mail@yourdomain.tld
+      app1:
+        image: nginx
+        networks:
+          - proxy-net
+        volumes:
+          - app1-web:/usr/share/nginx/html
+        environment:
