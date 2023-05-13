@@ -380,7 +380,7 @@ restarts.
 1.  Start the containers: run `docker start proxy acme app1 app2`
 1.  Test that you can connect to both applications, that the applications are
     separate, and that you are redirected to https for the applications
-1.  Reboot the computer or virtual machine hosting the applications
+1.  Reboot the host
 1.  Test again!
 
 If everything stayed up after a reboot, then you are done!
