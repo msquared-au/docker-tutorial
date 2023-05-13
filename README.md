@@ -439,3 +439,67 @@ set of containers can then be managed all at once with single commands.
         volumes:
           - app1-web:/usr/share/nginx/html
         environment:
+          - VIRTUAL_HOST=app1.mydomain.com
+          - LETSENCRYPT_HOST=app1.mydomain.com
+      app2:
+        image: nginx
+        networks:
+          - proxy-net
+        volumes:
+          - app2-web:/usr/share/nginx/html
+        environment:
+          - VIRTUAL_HOST=app2.mydomain.com
+          - LETSENCRYPT_HOST=app2.mydomain.com
+    networks:
+      proxy-net:
+    volumes:
+      acme:
+      certs:
+      vhost:
+      html:
+      app1-web:
+      app2-web:
+    ```
+1.  Shut down the containers we created above: run `docker stop app1 app2 proxy acme`
+    * Tip: this command will stop all containers: `docker stop $(docker ps -a -q)`
+1.  Remove the containers we created above: docker rm app1 app2 proxy acme
+    * Tip:  this command will remove all stopped containers: `docker container prune`
+1.  Start the containers: `docker compose up`
+1.  This will set everything up and run all the containers; it may take a while for everything to be ready
+1.  Once the logging settles down, go to your web sites and check!  Note that the two web app contents will have been reset (see below for why, and how to fix this)
+1.  Shut down the set of containers with `^C`
+1.  Create the containers: `docker compose create` in the folder containing `compose.yaml`
+1.  Start the containers in the backgound (so that `^C` doesn't stop them): run `docker compose start` in the folder containing `compose.yaml`
+1.  Check that the websites are up again
+1.  Reboot the host and check again to see if the applications came back up
+
+### Notes
+
+* `docker compose` creates namespaces for things based on the name of the
+  folder containing the file `compose.yaml`:
+  * For example, the web app volumes will be called `web_app1-web` and
+    `web_app2-web` because we put `compose.yaml` in the folder `web`
+  * The shared network will be named `web_proxy-net` for the same reason
+* There's no way to rename volumes; if you want to use the existing data from
+  the volumes you created before, you'll have to copy them yourself
+  * For example: run
+    `docker run --rm --volume=app1-web:/mnt/src --volume=web_app1-web:/mnt/dest ubuntu bash -c 'cp -a /mnt/src/* /mnt/dest'`
+    to copy the contents of volume `app1-web` to the volume `web_app1-web`
+  * Note: running the `cp` (copy) command via `bash` (a commonly used shell)
+    allows bash to expand `*` to the list of files and folders in the volume,
+   simplifying the process of copying everything between the volumes
+* `docker compose` is intended to manage large deployments and perform scaling
+  using multiple container instances; this means:
+  * The project-name prefix mechanism might be confusing or get in the way when
+    setting up a single set of containers
+  * When setting up multiple sets of containers, consider creating a single
+    folder to hold folders for your `compose.yaml` files: this will prevent
+    two folders with `compose.yaml` from having the same name and thus
+    from causing conflicts
+  * Adding a new web host means adding a new container via `compose.yaml` then
+    re-creating the containers via `docker compose down`,
+    `docker compose up --detach` (the option `--detach` causes the containers
+    to run in the background, like `docker compose start` does)
+  * `docker compose` commands act on the file `compose.yaml` in the current
+    folder
+
