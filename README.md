@@ -249,7 +249,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 1.  fetch the nginx-proxy docker image: docker pull nginxproxy/nginx-proxy
 1.  in this order, run these commands:
     1.  `docker run -it --rm --name=app1 --net=proxy-net --volume=app1-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app1.yourdomain.tld nginx`
-    1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 --volume=/var/run/docker.sock:/tmp/docker.sock:ro nginxproxy/nginx-proxy`
+    1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 --volume=/var/run/docker.sock:/tmp/docker.sock:ro --env=TRUST_DOWNSTREAM_PROXY=false nginxproxy/nginx-proxy`
     1.  `docker run -it --rm --name=app2 --net=proxy-net --volume=app2-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app2.yourdomain.tld nginx`
 1.  You should be able to access both app1 and app2 hosts via their respective
     hostnames, even though one was created before and one was created after the
@@ -268,6 +268,20 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
   containers with the "VIRTUAL_HOST" environment variable, since otherwise it
   will have missed the start-up notification for containers that were launched
   before it
+* The option `--env=TRUST_DOWNSTREAM_PROXY=false` is a security feature:
+  * Normally, nginx instances are capable of making use of certain
+    proxy-related headers in order to communicate with one another to improve
+    performance and security
+  * However, nginx instances that receive direct connections from the outside
+    world should ignore these headers, as they could be forged in order to
+    attempt to bypass security features
+  * The nginx Docker image is configured to make use of these headers, to
+    simplify the task of configuring multiple instances that collaborate,
+    like ours are collaborating between the proxy instance and the application
+    instances.
+  * However, we should override that default on any public-facing instances
+    to prevent a malicious actor from trying to trick our proxy into behaving
+    in a way that is less secure.
 
 ### Troubleshooting information:
 
