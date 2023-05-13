@@ -270,6 +270,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
   before it
 
 ### Troubleshooting information:
+
 * Configuration file that's maintained by docker-gen: /etc/nginx/conf.d/default.conf
 * More information:
   * https://github.com/nginx-proxy/nginx-proxy
