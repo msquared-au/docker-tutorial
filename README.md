@@ -306,6 +306,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
         --volume certs:/etc/nginx/certs --volume vhost:/etc/nginx/vhost.d
         --volume html:/usr/share/nginx/html
         --volume=/var/run/docker.sock:/tmp/docker.sock:ro
+        --env=TRUST_DOWNSTREAM_PROXY=false
         nginxproxy/nginx-proxy`
     1.  `docker run -it --rm --name acme
         --volumes-from proxy
