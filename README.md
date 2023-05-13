@@ -241,7 +241,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 ### Troubleshooting information
 
 * nginx's configuration is at /etc/nginx
-* To reload nginx config: `nginx -s reload`
+* To reload nginx configuration: `nginx -s reload`
   * eg: to reload the proxy from the main host, run `docker exec proxy nginx -s reload`
 
 ## Replace our simple example nginx proxy with one that has some powerful automation built-in
@@ -279,7 +279,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 ## Add SSL support via a separate container that integrates with the proxy container
 
 1.  Fetch the Docker image: run `docker pull nginxproxy/acme-companion`
-1.  Create the volumes needed for sharing certs and config between the proxy container
+1.  Create the volumes needed for sharing certificates and configuration between the proxy container
     and the acme container
     (acme is the certificate protocol used by Let's Encrypt):
     1.  Run `docker volume create --name certs`
