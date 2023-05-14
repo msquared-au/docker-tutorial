@@ -323,6 +323,12 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 1.  You should be able to go to app1.dockertest.yourdomain.tld and automatically be
     redirected to https://app1.dockertest.yourdomain.tld - congratulations, you set up SSL
     with zero effort!
+    * If you are not redirected to the https site, check the logs and wait
+      to see if anything is happening; the acme companion might be in the
+      process of generating certificates and reloading the proxy's
+      configuration.  After the logs settle down, reload the app1
+      page and see if it's redirected to the https version of the app1
+      page.
 1.  If you watch the proxy log, you'll very quickly see a handful of things
     connect to your new site, even though you might not yet have alerted anyone
     to its existence!
