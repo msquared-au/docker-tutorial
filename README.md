@@ -260,13 +260,13 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 ### Notes
 
 * There is no explicit configuration of the proxy instance here: the proxy instance finds
-  the applications via the environment variable "VIRTUAL_HOST" specified on each instance
+  the applications via the environment variable `VIRTUAL_HOST` specified on each instance
 * There is a tool running in the proxy instance called "docker-gen" that monitors
   Docker for notifications of start-up and shut-down of other docker containers
 * docker-gen uses the information to update the configuration file inside the
   proxy container and notify nginx that it needs to update its configuration
 * When the proxy container starts up, docker-gen checks for any existing
-  containers with the "VIRTUAL_HOST" environment variable, since otherwise it
+  containers with the `VIRTUAL_HOST` environment variable, since otherwise it
   will have missed the start-up notification for containers that were launched
   before it
 * The option `--env=TRUST_DOWNSTREAM_PROXY=false` is a security feature:
