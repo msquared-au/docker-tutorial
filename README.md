@@ -195,7 +195,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 * All apps can share the same ports (port 80 for http connections, and port 443 for https connections)
 * https can be added to all apps without having to implement https support to any of the apps
 
-1.  Create a volume for the configuration: run `docker volume create proxy-conf`
+1.  Create a volume for the configuration: run `docker volume create --name proxy-conf`
 1.  Run a temporary docker instance to access the volume: run `docker run -it --rm --volume=proxy-conf/mount/proxy-conf ubuntu bash`
 1.  Install vim: run `apt-get update ; apt-get install vim`
 1.  Create `proxy.conf` in `/mnt/proxy-conf` and give it this content:
