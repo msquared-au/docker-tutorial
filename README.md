@@ -345,6 +345,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
         --env=LETSENCRYPT_HOST=app2.dockertest.yourdomain.tld
         nginx`
 1.  You should be able to visit that site, too, and be redirected to https!
+1.  Shut down each container with `^C`
 
 ### Additional information
 
