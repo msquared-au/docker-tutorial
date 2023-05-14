@@ -478,8 +478,11 @@ set of containers can then be managed all at once with single commands.
 1.  This will set everything up and run all the containers; it may take a while for everything to be ready
 1.  Once the logging settles down, go to your web sites and check!  Note that the two web app contents will have been reset (see below for why, and how to fix this)
 1.  Shut down the set of containers with `^C`
-1.  Create the containers: `docker compose create` in the folder containing `compose.yaml`
 1.  Start the containers in the backgound (so that `^C` doesn't stop them): run `docker compose start` in the folder containing `compose.yaml`
+    * Note: normally you would run `docker compose create` to create the
+      containers before running `docker compose start`, but Docker already
+      created them for us when we ran `docker compose up` and did not remove
+      them when we stopped them.
 1.  Check that the websites are up again
 1.  Reboot the host and check again to see if the applications came back up
 
