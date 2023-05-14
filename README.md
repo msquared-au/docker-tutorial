@@ -339,11 +339,11 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
     * https://domainsproject.org/
     * Google
 1.  Now start the second app container:
-        docker run -it --rm --name=app2 --net=proxy-net
+        Run `docker run -it --rm --name=app2 --net=proxy-net
         --volume=app2-web:/usr/share/nginx/html
         --env=VIRTUAL_HOST=app2.dockertest.yourdomain.tld
         --env=LETSENCRYPT_HOST=app2.dockertest.yourdomain.tld
-        nginx
+        nginx`
 1.  You should be able to visit that site, too, and be redirected to https!
 
 ### Additional information
@@ -469,8 +469,8 @@ set of containers can then be managed all at once with single commands.
     ```
 1.  Shut down the containers we created above: run `docker stop app1 app2 proxy acme`
     * Tip: this command will stop all containers: `docker stop $(docker ps -a -q)`
-1.  Remove the containers we created above: docker rm app1 app2 proxy acme
-    * Tip:  this command will remove all stopped containers: `docker container prune`
+1.  Remove the containers we created above: run `docker rm app1 app2 proxy acme`
+    * Tip: this command will remove all stopped containers: `docker container prune`
 1.  Start the containers: `docker compose up`
 1.  This will set everything up and run all the containers; it may take a while for everything to be ready
 1.  Once the logging settles down, go to your web sites and check!  Note that the two web app contents will have been reset (see below for why, and how to fix this)
