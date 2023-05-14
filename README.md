@@ -247,8 +247,8 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 
 ## Replace our simple example nginx proxy with one that has some powerful automation built-in
 
-1.  fetch the nginx-proxy docker image: docker pull nginxproxy/nginx-proxy
-1.  in this order, run these commands:
+1.  fetch the nginx-proxy docker image: run `docker pull nginxproxy/nginx-proxy`
+1.  In this order, run these commands:
     1.  `docker run -it --rm --name=app1 --net=proxy-net --volume=app1-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app1.yourdomain.tld nginx`
     1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 --volume=/var/run/docker.sock:/tmp/docker.sock:ro --env=TRUST_DOWNSTREAM_PROXY=false nginxproxy/nginx-proxy`
     1.  `docker run -it --rm --name=app2 --net=proxy-net --volume=app2-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app2.yourdomain.tld nginx`
