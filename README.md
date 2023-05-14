@@ -377,13 +377,13 @@ restarts.
       nginxproxy/acme-companion`
     * `docker container create --name=app1 --restart=unless-stopped --net=proxy-net
       --volume=app1-web:/usr/share/nginx/html
-      --env=VIRTUAL_HOST=app1.mydomain.com
-      --env=LETSENCRYPT_HOST=app1.mydomain.com
+      --env=VIRTUAL_HOST=app1.dockertest.yourdomain.tld
+      --env=LETSENCRYPT_HOST=app1.dockertest.yourdomain.tld
       nginx`
     * `docker container create --name=app2 --restart=unless-stopped --net=proxy-net
       --volume=app2-web:/usr/share/nginx/html
-      --env=VIRTUAL_HOST=app2.mydomain.com
-      --env=LETSENCRYPT_HOST=app2.mydomain.com
+      --env=VIRTUAL_HOST=app2.dockertest.yourdomain.tld
+      --env=LETSENCRYPT_HOST=app2.dockertest.yourdomain.tld
       nginx`
 1.  Start the containers: run `docker start proxy acme app1 app2`
 1.  Test that you can connect to both applications, that the applications are
@@ -447,8 +447,8 @@ set of containers can then be managed all at once with single commands.
         volumes:
           - app1-web:/usr/share/nginx/html
         environment:
-          - VIRTUAL_HOST=app1.mydomain.com
-          - LETSENCRYPT_HOST=app1.mydomain.com
+          - VIRTUAL_HOST=app1.dockertest.yourdomain.tld
+          - LETSENCRYPT_HOST=app1.dockertest.yourdomain.tld
       app2:
         image: nginx
         networks:
@@ -456,8 +456,8 @@ set of containers can then be managed all at once with single commands.
         volumes:
           - app2-web:/usr/share/nginx/html
         environment:
-          - VIRTUAL_HOST=app2.mydomain.com
-          - LETSENCRYPT_HOST=app2.mydomain.com
+          - VIRTUAL_HOST=app2.dockertest.yourdomain.tld
+          - LETSENCRYPT_HOST=app2.dockertest.yourdomain.tld
     networks:
       proxy-net:
     volumes:
