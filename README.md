@@ -397,6 +397,12 @@ Congratulations, you went through the journey of setting up Docker containers
 to run your applications, and hopefully learned a lot about Docker and about
 hosting applications under Docker.
 
+### Tips
+
+* If you want to watch the logs for one of the containers while
+  accessing your applications, run `docker logs --follow`.  For example,
+  to watch the proxy logs run `docker logs proxy --follow`.
+
 ## Use "docker compose" to manage persisten containers (optional)
 
 This step is optional, and is an alternative approach to the previous step for
