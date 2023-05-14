@@ -415,9 +415,9 @@ set of containers, including setup of Docker volumes and Docker networks; the
 set of containers can then be managed all at once with single commands.
 
 1.  Shut down the containers we created above: run `docker stop app1 app2 proxy acme`
-    * Tip: if you don't have any other containers running, this command will stop all containers: `docker stop $(docker ps -a -q)`
+    * Tip: this command will stop all containers: `docker stop $(docker ps -a -q)`
 1.  Remove the containers we created above: run `docker rm app1 app2 proxy acme`
-    * Tip: if you don't have any other containers on the system, this command will remove all stopped containers: `docker container prune`
+    * Tip: this command will remove all stopped containers: `docker container prune`
 1.  Create a folder called `web`, and within it create a file called `compose.yaml` with the following content:
     ```nginxproxy
     services:
@@ -474,10 +474,6 @@ set of containers can then be managed all at once with single commands.
       app1-web:
       app2-web:
     ```
-1.  Shut down the containers we created above: run `docker stop app1 app2 proxy acme`
-    * Tip: this command will stop all containers: `docker stop $(docker ps -a -q)`
-1.  Remove the containers we created above: run `docker rm app1 app2 proxy acme`
-    * Tip: this command will remove all stopped containers: `docker container prune`
 1.  Start the containers: `docker compose up`
 1.  This will set everything up and run all the containers; it may take a while for everything to be ready
 1.  Once the logging settles down, go to your web sites and check!  Note that the two web app contents will have been reset (see below for why, and how to fix this)
