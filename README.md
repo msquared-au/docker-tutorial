@@ -207,14 +207,14 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
     }
     server {
         listen      80;
-        server_name app1.yourdomain.tld;
+        server_name app1.dockertest.yourdomain.tld;
         location    / {
             proxy_pass http://app1;
         }
     }
     server {
         listen      80;
-        server_name app2.yourdomain.tld;
+        server_name app2.dockertest.yourdomain.tld;
         location    / {
             proxy_pass http://app2;
         }
@@ -227,7 +227,7 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
     1.  `docker run -it --rm --name=app1 --net=proxy-net --volume=app1-web:/usr/share/nginx/html nginx`
     1.  `docker run -it --rm --name=app2 --net=proxy-net --volume=app2-web:/usr/share/nginx/html nginx`
     1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 --volume=proxy-conf:/etc/nginx/conf.d nginx`
-1.  You should now be able to connect to app1 and app2 at http://app1.yourdomain.tld/ and http://app2.yourdomain.tld/ without using custom ports
+1.  You should now be able to connect to app1 and app2 at http://app1.dockertest.yourdomain.tld/ and http://app2.dockertest.yourdomain.tld/ without using custom ports
     * When you access app1, you should see activity in the proxy container and the app1 container
     * When you access app2, you should see activity in the proxy container and the app2 container
 1.  When you're finished testing, shut down each nginx container with `^C`
@@ -249,9 +249,9 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 
 1.  fetch the nginx-proxy docker image: run `docker pull nginxproxy/nginx-proxy`
 1.  In this order, run these commands:
-    1.  `docker run -it --rm --name=app1 --net=proxy-net --volume=app1-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app1.yourdomain.tld nginx`
+    1.  `docker run -it --rm --name=app1 --net=proxy-net --volume=app1-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app1.dockertest.yourdomain.tld nginx`
     1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 --volume=/var/run/docker.sock:/tmp/docker.sock:ro --env=TRUST_DOWNSTREAM_PROXY=false nginxproxy/nginx-proxy`
-    1.  `docker run -it --rm --name=app2 --net=proxy-net --volume=app2-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app2.yourdomain.tld nginx`
+    1.  `docker run -it --rm --name=app2 --net=proxy-net --volume=app2-web:/usr/share/nginx/html --env=VIRTUAL_HOST=app2.dockertest.yourdomain.tld nginx`
 1.  You should be able to access both app1 and app2 hosts via their respective
     hostnames, even though one was created before and one was created after the
     proxy was started up!
@@ -318,10 +318,10 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 1.  Start the first app container:
     1.  Run `docker run -it --rm --name=app1 --net=proxy-net
         --volume=app1-web:/usr/share/nginx/html
-        --env=VIRTUAL_HOST=app1.yourdomain.tld
-        --env=LETSENCRYPT_HOST=app1.yourdomain.tld nginx`
-1.  You should be able to go to app1.yourdomain.tld and automatically be
-    redirected to https://app1.yourdomain.tld - congratulations, you set up SSL
+        --env=VIRTUAL_HOST=app1.dockertest.yourdomain.tld
+        --env=LETSENCRYPT_HOST=app1.dockertest.yourdomain.tld nginx`
+1.  You should be able to go to app1.dockertest.yourdomain.tld and automatically be
+    redirected to https://app1.dockertest.yourdomain.tld - congratulations, you set up SSL
     with zero effort!
 1.  If you watch the proxy log, you'll very quickly see a handful of things
     connect to your new site, even though you might not yet have alerted anyone
@@ -335,8 +335,8 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
 1.  Now start the second app container:
         docker run -it --rm --name=app2 --net=proxy-net
         --volume=app2-web:/usr/share/nginx/html
-        --env=VIRTUAL_HOST=app2.yourdomain.tld
-        --env=LETSENCRYPT_HOST=app2.yourdomain.tld
+        --env=VIRTUAL_HOST=app2.dockertest.yourdomain.tld
+        --env=LETSENCRYPT_HOST=app2.dockertest.yourdomain.tld
         nginx
 1.  You should be able to visit that site, too, and be redirected to https!
 
