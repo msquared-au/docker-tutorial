@@ -18,6 +18,6 @@ Not in any particular order...
   * set up each application in its own project
   * set up a common network that allows each application project to be
     reachable from the proxy project
-  * this is probably the ideal endpoint, since at least some database-backed
+  * this is probably the ideal end-goal, since at least some database-backed
     applications seem to be set up as their own docker project with the web
     front-end in one container and the database in another
