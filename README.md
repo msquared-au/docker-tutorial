@@ -627,7 +627,7 @@ the proxy and its acme companion, and one each for the two apps we have.
     now display the correct content for each app.
 1.  Shut down each project with `^C`
 1.  Start all projects in the background: run `docker compose start` in
-    each of the project folders (`proxy`, `app1`, and app2`)
+    each of the project folders (`proxy`, `app1`, and `app2`)
 
 ### Notes
 
