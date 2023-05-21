@@ -516,3 +516,145 @@ set of containers can then be managed all at once with single commands.
   * `docker compose` commands act on the file `compose.yaml` in the current
     folder
 
+## Separate the proxy and the apps into their own "docker compose" projects
+
+Our example web apps were simple enough to run in a single container, making
+them easy to add to a docker-compose project; in this case, we bundled them
+in with the proxy project.  However, we should put each of our apps into a
+separate docker-compose project: this lets us create complex projects
+comprised of multiple containers, and have their setup and configuration
+separate from one another and from the proxy.  Creating a separate project
+for each app also means we don't have to name the per-app networks or per-app
+volumes according to the app, since each project has its own namespace.  For
+example, we can call the data volume for app1 `web` instead of `app1-web`.
+
+First, we'll create a new shared network that doesn't belong to any
+individual project, and use that as the means to communicate between the
+proxy and the apps.  We'll call this network "dispatch", since it is the
+channel that the proxy will use to dispatch requests to the various apps.
+
+Then, we'll separate the current docker-compose project into one for
+the proxy and its acme companion, and one each for the two apps we have.
+
+1.  Shut down and remove the web project:
+    in the `web` folder, run `docker compose down`
+1.  Create the dispatch network: run `docker network create dispatch`
+1.  Create folders `proxy`, `app1`, and `app2` in the docker folder
+1.  Create the project files:
+    * Create `compose.yaml` in `proxy` and give it this content:
+      ```
+      services:
+        proxy:
+          image: nginxproxy/nginx-proxy
+          ports:
+            - "80:80"
+            - "443:443"
+          networks:
+            - dispatch
+            - default
+          volumes:
+            - certs:/etc/nginx/certs
+            - vhost:/etc/nginx/vhost.d
+            - html:/usr/share/nginx/html
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+          environment:
+            - TRUST_DOWNSTREAM_PROXY=false
+        acme:
+          image: nginxproxy/acme-companion
+          networks:
+            - default
+          volumes_from:
+            - proxy
+          volumes:
+            - acme:/etc/acme.sh
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+          environment:
+            - DEFAULT_EMAIL=mail@yourdomain.tld
+      networks:
+        dispatch:
+          external: true
+      volumes:
+        acme:
+        certs:
+        vhost:
+        html:
+      ```
+    * Create `compose.yaml` in `app1` and give it this content:
+      ```
+      services:
+        web:
+          image: nginx
+          networks:
+            - dispatch
+          volumes:
+            - web:/usr/share/nginx/html
+          environment:
+            - VIRTUAL_HOST=app1.dockertest.yourdomain.tld
+            - LETSENCRYPT_HOST=app1.dockertest.yourdomain.tld
+      networks:
+        dispatch:
+          external: true
+      volumes:
+        web:
+      ```
+    * Create `compose.yaml` in `app2` and give it this content:
+      ```
+      services:
+        web:
+          image: nginx
+          networks:
+            - dispatch
+          volumes:
+            - web:/usr/share/nginx/html
+          environment:
+            - VIRTUAL_HOST=app2.dockertest.yourdomain.tld
+            - LETSENCRYPT_HOST=app2.dockertest.yourdomain.tld
+      networks:
+        dispatch:
+          external: true
+      volumes:
+        web:
+      ```
+1.  Start the application: run `docker compose up` in each of the docker
+    project folders
+1.  Once the logs settle down, you should be able to visit
+    app1.dockertest.yourdomain.tld and app2.dockertest.yourdomain.tld
+    in a browser!  Note, however, that we are using new volumes and
+    so the per-app text for each site has been reset to the default
+    content for nginx.
+1.  Use the same technique above to copy volume `web_app1-web` to
+    `app1_web` and `web_app2-web` to `app2_web`; the two apps should
+    now display the correct content for each app.
+1.  Shut down each project with `^C`
+1.  Start all projects in the background: run `docker compose start` in
+    each of the project folders (`proxy`, `app1`, and app2`)
+
+### Notes
+
+* Note that the docker-compose project files for app1 and app2 have the
+  application service named `web` instead of `app1` and `app2`; this is
+  because we want to describe the service's purpose from the perspective
+  of the application as a whole: we're declaring that this is a web
+  service.  The name of the application is the name of the folder
+  containing the project, which will be `app1` and `app2`.  Because
+  the internal (default) network for the application and the volumes
+  for the application take part of their name from the project name
+  (ie: from the folder name), they will already be separate from one
+  another.  To see this, run `docker network ls` and `docker volume ls`
+  once all the projects are running.
+* Definitions for the dispatch network all contain `external: true` as part
+  of their definition; this indicates that the docker network should already
+  exist and that `docker compose` should not create it.
+* Notice that the only difference between app1 and app2 is the environment
+  variables for `VIRTUAL_HOST` and `LETSENCRYPT_HOST`.  You could replace
+  these with `VIRTUAL_HOST=${APP_HOST:?}` and `LETSENCRYPT_HOST=${APP_HOST:?}`
+  and put a definition for `APP_HOST` into
+  (a `.env` file)[https://docs.docker.com/compose/environment-variables/set-environment-variables/].
+  Then you could use the same `compose.yaml` file for both applications!  This
+  is great for having multiple applications that are essentially the same but
+  with different hostnames and data for different application instances.  It
+  also means that the `compose.yaml` file can be stores centrally (such as in a
+  source repository) and shared between multiple application instances.  (Note:
+  `:?` in the variable definitions causes docker to fail and display an error
+  if the corresponding variable is not set.)
+
