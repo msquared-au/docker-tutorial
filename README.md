@@ -668,8 +668,9 @@ with zero work.
 
 1.  Follow the instructions for
     [getting started with Docker Compose](https://docs.docker.com/compose/gettingstarted/),
-    but this this change:
-    * Instead of `mkdir composetest` and `cd composetest` as the first step, do this:
+    but with these changes:
+    * Instead of starting with `mkdir composetest` and `cd composetest` as the
+      first step, do this:
       ```shell
       mkdir ~/docker/app3
       cd ~/docker/app3
