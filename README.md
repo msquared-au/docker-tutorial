@@ -403,7 +403,7 @@ hosting applications under Docker.
   accessing your applications, run `docker logs --follow`.  For example,
   to watch the proxy logs run `docker logs proxy --follow`.
 
-## Use "docker compose" to manage persisten containers (optional)
+## Use "docker compose" to manage persistent containers (optional)
 
 This step is optional, and is an alternative approach to the previous step for
 creating persistent containers.
