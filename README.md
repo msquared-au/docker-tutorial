@@ -649,7 +649,7 @@ the proxy and its acme companion, and one each for the two apps we have.
   variables for `VIRTUAL_HOST` and `LETSENCRYPT_HOST`.  You could replace
   these with `VIRTUAL_HOST=${APP_HOST:?}` and `LETSENCRYPT_HOST=${APP_HOST:?}`
   and put a definition for `APP_HOST` into
-  (a `.env` file)[https://docs.docker.com/compose/environment-variables/set-environment-variables/].
+  [a `.env` file](https://docs.docker.com/compose/environment-variables/set-environment-variables/).
   Then you could use the same `compose.yaml` file for both applications!  This
   is great for having multiple applications that are essentially the same but
   with different hostnames and data for different application instances.  It
