@@ -11,13 +11,3 @@ Not in any particular order...
 * check if SSL Mozilla modern profile is valuable (SSL_POLICY=Mozilla-Modern in https://hub.docker.com/r/nginxproxy/nginx-proxy)
   * oddly enough, using the modern profile seems to reduce the site's rating at https://www.ssllabs.com/ssltest/
 * consider adding external logging (logging to a volume or to external service)
-* advanced: investigate whether multiple docker-compose projects can talk to
-  one another and still be supported transparently by an nginx proxy with its
-  acme companion:
-  * set up one project for nginx and acme
-  * set up each application in its own project
-  * set up a common network that allows each application project to be
-    reachable from the proxy project
-  * this is probably the ideal end-goal, since at least some database-backed
-    applications seem to be set up as their own docker project with the web
-    front-end in one container and the database in another
