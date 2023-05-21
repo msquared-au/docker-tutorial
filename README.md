@@ -669,14 +669,14 @@ with zero work.
 1.  Follow the instructions for
     [getting started with Docker Compose](https://docs.docker.com/compose/gettingstarted/),
     but with these changes:
-    * Instead of starting with `mkdir composetest` and `cd composetest` as the
-      first step, do this:
+    * As the first step, do this (instead of starting with `mkdir composetest`
+      and `cd composetest`):
       ```shell
       mkdir ~/docker/app3
       cd ~/docker/app3
       ```
-    * When testing, instead of connecting to `http://127.0.0.1:8000/`, connect
-      to `http://http://dockertest.yourdomain.tld:8000/`
+    * When testing, connect to `http://dockertest.yourdomain.tld:8000/`
+      (instead of connecting to `http://127.0.0.1:8000/`)
 1.  Stop the app: run `docker compose down` in the `app3` folder
 1.  Edit `docker-compose.yml` in the `app3` folder:
     * In the section for the `web` service, add a `networks` section like this:
