@@ -11,3 +11,5 @@ Not in any particular order...
 * check if SSL Mozilla modern profile is valuable (SSL_POLICY=Mozilla-Modern in https://hub.docker.com/r/nginxproxy/nginx-proxy)
   * oddly enough, using the modern profile seems to reduce the site's rating at https://www.ssllabs.com/ssltest/
 * consider adding external logging (logging to a volume or to external service)
+* consider adding a demonstration "proper" application (ie: an application that
+  is implemented as a docker-compose project with multiple containers)
