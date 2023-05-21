@@ -227,7 +227,9 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
     1.  `docker run -it --rm --name=app1 --net=proxy-net --volume=app1-web:/usr/share/nginx/html nginx`
     1.  `docker run -it --rm --name=app2 --net=proxy-net --volume=app2-web:/usr/share/nginx/html nginx`
     1.  `docker run -it --rm --name=proxy --net=proxy-net -p 80:80 --volume=proxy-conf:/etc/nginx/conf.d nginx`
-1.  You should now be able to connect to app1 and app2 at http://app1.dockertest.yourdomain.tld/ and http://app2.dockertest.yourdomain.tld/ without using custom ports
+1.  You should now be able to connect to app1 and app2 at
+    `http://app1.dockertest.yourdomain.tld/` and
+    `http://app2.dockertest.yourdomain.tld/` without using custom ports
     * When you access app1, you should see activity in the proxy container and the app1 container
     * When you access app2, you should see activity in the proxy container and the app2 container
 1.  When you're finished testing, shut down each nginx container with `^C`
@@ -320,9 +322,9 @@ Creating a special-purpose "proxy" container gives us some useful capabilities:
         --volume=app1-web:/usr/share/nginx/html
         --env=VIRTUAL_HOST=app1.dockertest.yourdomain.tld
         --env=LETSENCRYPT_HOST=app1.dockertest.yourdomain.tld nginx`
-1.  You should be able to go to app1.dockertest.yourdomain.tld and automatically be
-    redirected to https://app1.dockertest.yourdomain.tld - congratulations, you set up SSL
-    with zero effort!
+1.  You should be able to go to `http://app1.dockertest.yourdomain.tld` and
+    automatically be redirected to `https://app1.dockertest.yourdomain.tld` -
+    congratulations, you set up SSL with zero effort!
     * If you are not redirected to the https site, check the logs and wait
       to see if anything is happening; the acme companion might be in the
       process of generating certificates and reloading the proxy's
@@ -618,7 +620,7 @@ the proxy and its acme companion, and one each for the two apps we have.
 1.  Start the application: run `docker compose up` in each of the docker
     project folders
 1.  Once the logs settle down, you should be able to visit
-    app1.dockertest.yourdomain.tld and app2.dockertest.yourdomain.tld
+    `app1.dockertest.yourdomain.tld` and `app2.dockertest.yourdomain.tld`
     in a browser!  Note, however, that we are using new volumes and
     so the per-app text for each site has been reset to the default
     content for nginx.
@@ -707,7 +709,7 @@ with zero work.
     (if you're running the proxy project in the foreground, wait for the logs
     to settle; if you're running the proxy project in the background, wait a
     minute or two)
-1.  Visit http://app3.dockertest.yourdomain.tld/ in your browser to see the
+1.  Visit `http://app3.dockertest.yourdomain.tld/` in your browser to see the
     application at the expected web address, complete with a secure connection.
 
 ### Notes
