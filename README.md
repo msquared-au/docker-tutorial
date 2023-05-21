@@ -658,3 +658,21 @@ the proxy and its acme companion, and one each for the two apps we have.
   `:?` in the variable definitions causes docker to fail and display an error
   if the corresponding variable is not set.)
 
+## Add a non-trivial containerised app
+
+In this step, we'll add a docker-compose project that consists of two
+containers, one for the web front-end and one for data storage.  First
+we'll add it on its own port and test that, then we'll adapt the project
+to integrate it into our proxy, which will give it an SSL certificate
+with zero work.
+
+1.  Follow the instructions for
+    [getting started with Docker Compose](https://docs.docker.com/compose/gettingstarted/),
+    but this this change:
+    * Instead of `mkdir composetest` and `cd composetest` as the first step, do this:
+      ```shell
+      mkdir ~/docker/app3
+      cd ~/docker/app3
+      ```
+1.  to be continued
+
