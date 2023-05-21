@@ -675,5 +675,61 @@ with zero work.
       mkdir ~/docker/app3
       cd ~/docker/app3
       ```
-1.  to be continued
+    * When testing, instead of connecting to `http://127.0.0.1:8000/`, connect
+      to `http://http://dockertest.yourdomain.tld:8000/`
+1.  Stop the app: run `docker compose down` in the `app3` folder
+1.  Edit `docker-compose.yml` in the `app3` folder:
+    * In the section for the `web` service, add a `networks` section like this:
+      ```
+          networks:
+            - dispatch
+            - default
+      ```
+    * In the section for the `web` service, remove the `ports` section
+    * In the `environment` section for the `web` service add these
+      environment variables:
+      ```
+            VIRTUAL_HOST: app3.dockertest.yourdomain.tld
+            LETSENCRYPT_HOST: app3.dockertest.yourdomain.tld
+      ```
+    * At the bottom of the file, add a `networks` sections:
+      ```
+      networks:
+        dispatch:
+          external: true
+      ```
+    These changes add the project to the `dispatch` network, so that
+    the proxy can forward connections to it, and configure the hostname
+    for the proxy and the acme compantion (see notes below for details).
+1.  Start up the project: run `docker compose up` in the `app3` folder
+1.  Wait for the proxy/acme project to generate an SSL certificate and update
+    its configuration to dispatch requests for the app to the corresponding app
+    (if you're running the proxy project in the foreground, wait for the logs
+    to settle; if you're running the proxy project in the background, wait a
+    minute or two)
+1.  Visit http://app3.dockertest.yourdomain.tld/ in your browser to see the
+    application at the expected web address, complete with a secure connection.
+
+### Notes
+
+* By explicitly adding `networks` to the `web` app, docker would normally
+  not add the `default` network to that service, and so we must add it
+  explicitly; this is not needed for the `redis` service because that
+  service doesn't need to connect to the proxy, so we haven't created
+  an explicit `networks` definition; as a result, the service is
+  automatically connected to the default network for this project
+* The application still works without the `ports` section because we no
+  longer want the application to publish to any of the host's ports
+  because this makes the application directly accessible to the outside
+  world without using the proxy; remember that the proxy is there to
+  allow ports 80 and 443 to be shared among all the applications and to
+  provide SSL certificates to all the applications.  Removing the `ports`
+  section, therefore, prevents the application from publishing itself
+  directly to the outside world.  This is good isolation and good security.
+* Although the web application makes itself available on a non-standard
+  port (port 5000 instead of port 80), the proxy can still configure
+  itself to connect to the application correctly because the application
+  only provides one port for connection; if the application provided
+  multiple ports, the proxy might need additional information in order
+  to determine which port to dispatch web requests to.
 
